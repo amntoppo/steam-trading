@@ -11,7 +11,7 @@ passport.deserializeUser(function(obj, done) {
 });
 
 passport.use(new steamStrategy({
-    returnURL: 'http://localhost:8000/auth/return',
+    returnURL: 'http://localhost:8000/user/auth/return',
     realm: 'http://localhost:8000/',
     apiKey: '7B2DC8969F0F1EC23600CBC572B1C658'
   },

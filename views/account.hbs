@@ -1,0 +1,11 @@
+<div class="row centered mt-4">
+    <div class="col-md-4 col-md-offset-4 mx-auto">
+        {{#if login}}
+        <img src="{{picUrl}}">
+        <h1>{{data.steamid}}</h1>
+            <h1>{{data.displayName}}</h1>
+        {{else}}
+            <h1>No login</h1>
+        {{/if}}
+    </div>
+</div>

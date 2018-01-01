@@ -12,7 +12,7 @@ var mongoose = require('mongoose');
 var mongoStore = require('connect-mongo')(session);
 
 var index = require('./routes/index');
-var users = require('./routes/users');
+var users = require('./routes/user');
 require('./config/passport');
 
 var app = express();
@@ -53,6 +53,15 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(path.join(__dirname, 'public')));
 
+//locals
+app.use(function(req, res, next) {
+    res.locals.login = req.isAuthenticated();
+    res.locals.session = req.session;
+    //console.log(req.user);
+    next();
+});
+
+
 app.use('/', index);
 app.use('/user', users);
 
@@ -63,13 +72,6 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-//locals
-app.use(function(req, res, next) {
-    res.locals.login = req.isAuthenticated();
-    res.locals.session = req.session;
-    res.locals.user = req.user;
-    next();
-});
 
 // error handler
 app.use(function(err, req, res, next) {
