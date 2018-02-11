@@ -1,12 +1,13 @@
 var express = require('express');
 var passport = require('passport');
+var user = require('../models/user');
 var router = express.Router();
 
 /* GET users listing. */
 
 router.get('/account', ensureAuthenticated, function(req, res, next) {
     //console.log('ok');
-    console.log(req.user);
+    //console.log(req.user);
     res.render('account', {data: req.user, picUrl: req.user.photos[2].value});
 });
 
@@ -20,7 +21,7 @@ router.get('/', notAuthenticated, function (req, res, next) {
     next();
 });
 
-router.get('/signin', function(req, res, next) {
+router.get('/signin', notAuthenticated, function(req, res, next) {
     res.render('signin');
 });
 
@@ -41,13 +42,19 @@ router.get('/auth/return',
     function(req, res, next) {
         req.url = req.originalUrl;
         req.session.userSession = req.user;
-        console.log(req.session.userSession);
+        //console.log(req.session.userSession);
         next();
     },
     passport.authenticate('steam', { failureRedirect: '/signin' }),
     function(req, res) {
+        var User = new user();
+        User.userID = req.user.steamid;
+        User.username = req.user.displayName;
+        User.save(); //add callback
         res.redirect('/');
-    });
+});
+
+
 
 function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) { return next(); }
@@ -62,3 +69,5 @@ function notAuthenticated(req, res, next) {
 }
 
 module.exports = router;
+
+
